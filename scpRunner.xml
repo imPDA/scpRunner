@@ -1,4 +1,4 @@
-<GuiXml>
+<GuiXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sir.insidi.at/or/schema/esoui.xsd">
     <Controls>
         <!-- Virtual controls -->
         <Control name="scprSplitsTemplates" virtual="true" height="40" hidden="false">
@@ -37,129 +37,156 @@
 				</Label>
             </Controls>
 		</TopLevelControl>
+
+        <Texture name="scpDebugBackground" color="000011" alpha="0.5" virtual="true">
+            <AnchorFill />
+        </Texture>
+
+        <Label name="scpDefaultLabel" font="ZoFontWinH1" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" horizontalAlignment="LEFT" verticalAlignment="CENTER" virtual="true" />
     
         <!-- Main run review UI -->
-        <TopLevelControl name="scprStatsUI" hidden="true">
-            <Anchor point="CENTER"/>
+        <TopLevelControl name="scprStatsUI" hidden="false">
+            <Dimensions x="1152" y="1075" />
+            <Anchor point="RIGHT" offsetX="-50" />
                 <Controls>
-                    <!-- Background/main -->
-
-                    <Texture name="$(parent)TopBG" textureFile="ScpRunner/art/PostDungeonBG1.dds" alpha="0">
-                        <Anchor point="TOP"/>
-                        <Dimensions x="1152" y="700"/>
-                    </Texture>
-                    <Texture name="$(parent)BottomBG" textureFile="ScpRunner/art/PostDungeonBG2.dds" alpha="0">
-                        <Anchor point="BOTTOM"/>
-                        <Dimensions x="1152" y="700"/>
-                    </Texture>
-                    <Texture name="$(parent)loadscreenBG" textureFile="ScpRunner/art/ScpLoadscreenCrop.dds" alpha="0">
-                        <Anchor point="CENTER"/>
-                        <Dimensions x="404" y="75"/>
-                    </Texture>
-                    <Texture name="$(parent)TopTopDivider" textureFile="/esoui/art/miscellaneous/horizontaldivider_dynamic.dds" alpha="0">
-                        <Anchor point="CENTER"/>
-                        <Dimensions x="440" y="24"/>
-                    </Texture>
-                    <Texture name="$(parent)TopDivider" textureFile="/esoui/art/miscellaneous/horizontaldivider_dynamic.dds" alpha="0">
-                        <Anchor point="CENTER"/>
-                        <Dimensions x="1152" y="24"/>
-                    </Texture>
-                    <Texture name="$(parent)TopSubDivider" textureFile="/esoui/art/miscellaneous/horizontaldivider_dynamic.dds" alpha="0">
-                        <Anchor point="CENTER"/>
-                        <Dimensions x="390" y="24"/>
-                    </Texture>
-                    <Texture name="$(parent)BottomDivider" textureFile="/esoui/art/miscellaneous/horizontaldivider_dynamic.dds" alpha="0">
-                        <Anchor point="CENTER"/>
-                        <Dimensions x="1152" y="24"/>
-                    </Texture>
-                    <Texture name="$(parent)BottomSubDivider" textureFile="/esoui/art/miscellaneous/horizontaldivider_dynamic.dds" alpha="0">
-                        <Anchor point="CENTER"/>
-                        <Dimensions x="460" y="24"/>
-                    </Texture>
-
-                    <!-- Background/main -->
-
-                     <!-- Time Counter -->
-
-                    <Texture name="$(parent)TimeTallyIcon" textureFile="/esoui/art/trials/trialpoints_veryhigh.dds" alpha="0">
-                        <Anchor point="CENTER"/>
-                        <Dimensions x="54" y="54"/>
-                    </Texture>
-                    <Label name="$(parent)TimeTally" font="ZoFontWinH1" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" horizontalAlignment="LEFT" verticalAlignment="CENTER" hidden="true">
-                        <Anchor point="CENTER" offsetX="500" offsetY="-425"/>
-                        <Dimensions y="24"/>
-                    </Label>
-
-                    <!--Time counter -->
-
-                    <!-- Dungeon Name -->
-
-                    <Texture name="$(parent)DungeonIcon" textureFile="/esoui/art/journal/gamepad/gp_questtypeicon_groupdungeon.dds" alpha="0">
-                        <Anchor point="CENTER"/>
-                        <Dimensions y="64" x="64"/>
-                    </Texture>
-                    <Label name="$(parent)DungeonName" font="ZoFontWinH1" horizontalAlignment="LEFT" verticalAlignment="CENTER">
-                        <Anchor point="CENTER"/>
-                    </Label>
-
-                    <!-- Dungeon Name-->
-
-                    <!-- Splits stuff-->
-
-                    <Label name="$(parent)SplitsLabel" font="ZoFontWinH1" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" horizontalAlignment="LEFT" verticalAlignment="CENTER" hidden="true" >
-                        <Anchor point="CENTER" offsetX="500" offsetY="-425"/>
-                        <Dimensions y="24"/>
-                    </Label>
-                    <Texture name="$(parent)SplitsIcon" textureFile="/esoui/art/compass/repeatablequest_icon_assisted.dds">
-                        <Anchor point="CENTER"/>
-                        <Dimensions x="48" y="48"/>
-                    </Texture>
-                    <Texture name="$(parent)SplitsTopDivider" textureFile="/esoui/art/miscellaneous/horizontaldivider_dynamic.dds" alpha="0">
-                        <Anchor point="CENTER"/>
-                        <Dimensions x="230" y="24"/>
-                    </Texture>
-                    <Texture name="$(parent)SplitsBottomDivider" textureFile="/esoui/art/miscellaneous/horizontaldivider_dynamic.dds" alpha="0">
-                        <Anchor point="CENTER"/>
-                        <Dimensions x="230" y="24"/>
-                    </Texture>
-                    <Control name="$(parent)SplitsList" inherits="ZO_ScrollList">
-                        <Anchor point="CENTER"/>
-                        <Dimensions x="300" y="300"/>
+                    <Texture name="$(parent)DebugBackground" inherits="scpDebugBackground" color="005500" alpha="0.5" />
+                    <Control name="$(parent)Header">
+                        <Dimensions x="404" y="75" />
+                        <Anchor point="TOP" />
+                        <Controls>
+                            <!-- <Texture name="$(parent)DebugBackground" inherits="scpDebugBackground" /> -->
+                            <Texture name="$(parent)TopTopDivider" textureFile="/esoui/art/miscellaneous/horizontaldivider_dynamic.dds" tier="HIGH">
+                                <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="TOP" offsetY="2" />
+                                <Dimensions x="440" y="24" />
+                            </Texture>
+                            <Texture name="$(parent)loadscreenBG" textureFile="ScpRunner/art/ScpLoadscreenCrop.dds" tier="LOW">
+                                <AnchorFill />
+                            </Texture>
+                            <Label name="$(parent)DungeonName" inherits="scpDefaultLabel" text="Scalecaller Peak">
+                                <Anchor point="CENTER" offsetX="42" />
+                            </Label>
+                            <Texture name="$(parent)DungeonIcon" textureFile="/esoui/art/journal/gamepad/gp_questtypeicon_groupdungeon.dds">
+                                <Dimensions y="64" x="64"/>
+                                <Anchor point="RIGHT" relativeTo="$(parent)DungeonName" relativePoint="LEFT" offsetX="-20" />
+                            </Texture>
+                            <Texture name="$(parent)TopDivider" textureFile="/esoui/art/miscellaneous/horizontaldivider_dynamic.dds" tier="HIGH">
+                                <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="BOTTOM" offsetY="2" />
+                                <Dimensions x="1152" y="24"/>
+                            </Texture>
+                        </Controls>
                     </Control>
-
-                    <!-- Splits stuff-->
-
-                    <!-- Trifecta Counter -->
-
-                    <Label name="$(parent)TrifectasLabel" font="ZoFontWinH1" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" horizontalAlignment="LEFT" verticalAlignment="CENTER" hidden="true" >
-                        <Anchor point="CENTER" offsetX="500" offsetY="-425"/>
-                        <Dimensions y="24"/>
-                    </Label>
-                    <Texture name="$(parent)TrifectasIcon" textureFile="/esoui/art/menubar/gamepad/gp_playermenu_icon_achievements.dds">
-                        <Anchor point="CENTER"/>
-                        <Dimensions x="48" y="48"/>
+                    <Control name="$(parent)Body">
+                        <Dimensions x="1152" y="1000" />
+                        <Anchor point="TOP" relativeTo="$(parent)Header" relativePoint="BOTTOM" />
+                        <Controls>
+                            <Texture name="$(parent)TopBG" textureFile="ScpRunner/art/PostDungeonBG1.dds" alpha="0.7" tier="LOW">
+                                <Dimensions x="1152" y="700"/>
+                                <Anchor point="TOP" /> 
+                            </Texture>
+                            <Texture name="$(parent)BottomBG" textureFile="ScpRunner/art/PostDungeonBG2.dds" alpha="0.7" tier="LOW">
+                                <Dimensions x="1152" y="700"/>
+                                <Anchor point="BOTTOM" />
+                            </Texture>
+                            <Control name="$(parent)CentralColumn">
+                                <Dimensions x="390" y="900" />
+                                <Anchor point="TOP" />
+                                <Controls>
+                                    <!-- <Texture name="$(parent)DebugBackground" inherits="scpDebugBackground" /> -->
+                                    <Control name="$(parent)TimeTally" resizeToFitDescendents="true">
+                                        <Anchor point="TOP" offsetY="10" />
+                                        <Controls>
+                                            <Texture name="$(parent)Icon" textureFile="/esoui/art/trials/trialpoints_veryhigh.dds">
+                                                <Anchor point="LEFT" />
+                                                <Dimensions x="54" y="54"/>
+                                            </Texture>
+                                            <Label name="$(parent)Label" inherits="scpDefaultLabel" text="00:00.000">
+                                                <Anchor point="LEFT" relativeTo="$(parent)Icon" relativePoint="RIGHT" offsetX="10" />
+                                            </Label>
+                                        </Controls>
+                                    </Control>
+                                    <Texture name="$(parent)TopSubDivider" textureFile="/esoui/art/miscellaneous/horizontaldivider_dynamic.dds" tier="HIGH">
+                                        <Dimensions x="390" y="24"/>
+                                        <Anchor point="TOP" relativeTo="$(parent)TimeTally" relativePoint="BOTTOM" />
+                                    </Texture>
+                                    <Texture name="$(parent)Map" textureFile="ScpRunner/art/SCP-Map-Clean.dds" movable="true" mouseEnabled="true" alpha="0.6" tier="HIGH">
+                                        <Dimensions x="350" y="672" />
+                                        <Anchor point="CENTER" />
+                                    </Texture>
+                                    <Texture name="$(parent)BottomSubDivider" textureFile="/esoui/art/miscellaneous/horizontaldivider_dynamic.dds" tier="HIGH">
+                                        <Dimensions x="460" y="24"/>
+                                        <Anchor point="CENTER" relativePoint="BOTTOM" />
+                                    </Texture>
+                                </Controls>
+                            </Control>
+                            <Control name="$(parent)Splits">
+                                <Dimensions x="300" y="900"/>
+                                <Anchor point="RIGHT" relativeTo="$(parent)CentralColumn" relativePoint="LEFT" offsetX="-20" />
+                                <Controls>
+                                    <!-- <Texture name="$(parent)DebugBackground" inherits="scpDebugBackground" color="550055" alpha="0.5" /> -->
+                                    <Control name="$(parent)Header" resizeToFitDescendents="true">
+                                        <Anchor point="TOP" offsetY="95"/>
+                                        <Controls>
+                                            <Texture name="$(parent)Icon" textureFile="/esoui/art/compass/repeatablequest_icon_assisted.dds">
+                                                <Dimensions x="48" y="48" />
+                                                <Anchor point="LEFT" />
+                                            </Texture>
+                                            <Label name="$(parent)Label" inherits="scpDefaultLabel" text="Splits">
+                                                <Anchor point="LEFT" relativeTo="$(parent)Icon" relativePoint="RIGHT" offsetX="10" />
+                                            </Label>
+                                        </Controls>
+                                    </Control>
+                                    <Texture name="$(parent)TopDivider" textureFile="/esoui/art/miscellaneous/horizontaldivider_dynamic.dds" tier="HIGH">
+                                        <Dimensions x="230" y="24" />
+                                        <Anchor point="BOTTOM" relativeTo="$(parent)Header" relativePoint="TOP" />
+                                    </Texture>
+                                    <Texture name="$(parent)BottomDivider" textureFile="/esoui/art/miscellaneous/horizontaldivider_dynamic.dds" tier="HIGH">
+                                        <Dimensions x="230" y="24" />
+                                        <Anchor point="TOP" relativeTo="$(parent)Header" relativePoint="BOTTOM" />
+                                    </Texture>
+                                    <Control name="$(parent)List" inherits="ZO_ScrollList">
+                                        <Dimensions x="300" />
+                                        <Anchor point="TOP" relativeTo="$(parent)BottomDivider" relativePoint="BOTTOM" />
+                                        <Anchor point="BOTTOM" />
+                                        <Controls>
+                                            <!-- <Texture name="$(parent)DebugBackground" inherits="scpDebugBackground" color="FFFFFF" alpha="0.5" /> -->
+                                        </Controls>
+                                    </Control>
+                                </Controls>
+                            </Control>
+                            <Control name="$(parent)Trifectas">
+                                <Dimensions x="300" y="900" />
+                                <Anchor point="LEFT" relativeTo="$(parent)CentralColumn" relativePoint="RIGHT" offsetX="20" />
+                                <Controls>
+                                    <!-- <Texture name="$(parent)DebugBackground" inherits="scpDebugBackground" color="550055" alpha="0.5" /> -->
+                                    <Control name="$(parent)Header" resizeToFitDescendents="true">
+                                        <Anchor point="TOP" offsetY="95" />
+                                        <Controls>
+                                            <Texture name="$(parent)Icon" textureFile="/esoui/art/menubar/gamepad/gp_playermenu_icon_achievements.dds">
+                                                <Dimensions x="48" y="48"/>
+                                                <Anchor point="LEFT" />
+                                            </Texture>
+                                            <Label name="$(parent)Label" inherits="scpDefaultLabel" text="Trifectas">
+                                                <Anchor point="LEFT" relativeTo="$(parent)Icon" relativePoint="RIGHT" offsetX="10" />
+                                            </Label>
+                                        </Controls>
+                                    </Control>
+                                    <Texture name="$(parent)TopDivider" textureFile="/esoui/art/miscellaneous/horizontaldivider_dynamic.dds">
+                                        <Dimensions x="230" y="24"/>
+                                        <Anchor point="BOTTOM" relativeTo="$(parent)Header" relativePoint="TOP" />
+                                    </Texture>
+                                    <Texture name="$(parent)BottomDivider" textureFile="/esoui/art/miscellaneous/horizontaldivider_dynamic.dds" tier="HIGH">
+                                        <Dimensions x="230" y="24" />
+                                        <Anchor point="TOP" relativeTo="$(parent)Header" relativePoint="BOTTOM" />
+                                    </Texture>
+                                </Controls>
+                            </Control>
+                        </Controls>
+                    </Control>
+                    <Texture name="$(parent)BottomDivider" textureFile="/esoui/art/miscellaneous/horizontaldivider_dynamic.dds" tier="HIGH">
+                        <Dimensions x="1152" y="24"/>
+                        <Anchor point="CENTER" relativeTo="$(parent)Body" relativePoint="BOTTOM" />
                     </Texture>
-                    <Texture name="$(parent)TrifectasTopDivider" textureFile="/esoui/art/miscellaneous/horizontaldivider_dynamic.dds" alpha="0">
-                        <Anchor point="CENTER"/>
-                        <Dimensions x="230" y="24"/>
-                    </Texture>
-                    <Texture name="$(parent)TrifectasBottomDivider" textureFile="/esoui/art/miscellaneous/horizontaldivider_dynamic.dds" alpha="0">
-                        <Anchor point="CENTER"/>
-                        <Dimensions x="230" y="24"/>
-                    </Texture>
-
-                    <!-- Trifecta Counter-->
-
-                    <!-- SCP Map -->
-
-                    <Texture name="$(parent)Map" textureFile="ScpRunner/art/SCP-Map-Clean.dds" movable="true" mouseEnabled="true" alpha="0.6">
-                        <Anchor point="CENTER"/>
-                        <Dimensions x="350" y="672"/>
-                    </Texture>
-
-                    <!-- SCP Map -->
                 </Controls>
         </TopLevelControl>
-
     </Controls>
 </GuiXml>

@@ -1,35 +1,52 @@
+local function Logger(name)
+    if not LibDebugLogger then return function(...) end end
+
+    local logger = LibDebugLogger:Create(name or 'IMP_STATS')
+    logger:SetMinLevelOverride(LibDebugLogger.LOG_LEVEL_DEBUG)
+
+    local level = LibDebugLogger.LOG_LEVEL_DEBUG
+
+    local function inner(...)
+        logger:Log(level, ...)
+    end
+
+    return inner
+end
+
+local Log = Logger('SCP')
+
 --[Visual functions/definitions for the UI to de-clutter the main file and make it more readable]
-ScpRunner.UI = {
-    HUDTimerIcon = scprHudTimer:GetNamedChild("Icon"),
-    HUDTimer = scprHudTimer:GetNamedChild("Timer"),
-    HUDSplitsIcon = scprHudTimer:GetNamedChild("SplitIcon"),
-    HUDSplitsTime = scprHudTimer:GetNamedChild("SplitTime"),
+-- ScpRunner.UI = {
+--     HUDTimerIcon = scprHudTimer:GetNamedChild("Icon"),
+--     HUDTimer = scprHudTimer:GetNamedChild("Timer"),
+--     HUDSplitsIcon = scprHudTimer:GetNamedChild("SplitIcon"),
+--     HUDSplitsTime = scprHudTimer:GetNamedChild("SplitTime"),
 
-    TopBG = scprStatsUI:GetNamedChild("TopBG"),
-    BottomBG = scprStatsUI:GetNamedChild("BottomBG"),
-    TopDivider = scprStatsUI:GetNamedChild("TopDivider"),
-    TopTopDivider = scprStatsUI:GetNamedChild("TopTopDivider"),
-    TopTopBG = scprStatsUI:GetNamedChild("loadscreenBG"),
-    TopSubDivider = scprStatsUI:GetNamedChild("TopSubDivider"),
-    BottomSubDivider = scprStatsUI:GetNamedChild("BottomSubDivider"),
-    BottomDivier = scprStatsUI:GetNamedChild("BottomDivider"),
+--     TopBG = scprStatsUI:GetNamedChild("TopBG"),
+--     BottomBG = scprStatsUI:GetNamedChild("BottomBG"),
+--     TopDivider = scprStatsUI:GetNamedChild("TopDivider"),
+--     TopTopDivider = scprStatsUI:GetNamedChild("TopTopDivider"),
+--     TopTopBG = scprStatsUI:GetNamedChild("loadscreenBG"),
+--     TopSubDivider = scprStatsUI:GetNamedChild("TopSubDivider"),
+--     BottomSubDivider = scprStatsUI:GetNamedChild("BottomSubDivider"),
+--     BottomDivier = scprStatsUI:GetNamedChild("BottomDivider"),
 
-    DungeonIcon = scprStatsUI:GetNamedChild("DungeonIcon"),
-    DungeonName = scprStatsUI:GetNamedChild("DungeonName"),
+--     DungeonIcon = scprStatsUI:GetNamedChild("DungeonIcon"),
+--     DungeonName = scprStatsUI:GetNamedChild("DungeonName"),
 
-    TallyIcon = scprStatsUI:GetNamedChild("TimeTallyIcon"),
-    TallyLabel = scprStatsUI:GetNamedChild("TimeTally"),
+--     TallyIcon = scprStatsUI:GetNamedChild("TimeTallyIcon"),
+--     TallyLabel = scprStatsUI:GetNamedChild("TimeTally"),
 
-    SplitsLabel = scprStatsUI:GetNamedChild("SplitsLabel"),
-    SplitsIcon = scprStatsUI:GetNamedChild("SplitsIcon"),
-    SplitsTopDivider = scprStatsUI:GetNamedChild("SplitsTopDivider"),
-    SplitsBottomDivider = scprStatsUI:GetNamedChild("SplitsBottomDivider"),
+--     SplitsLabel = scprStatsUI:GetNamedChild("SplitsLabel"),
+--     SplitsIcon = scprStatsUI:GetNamedChild("SplitsIcon"),
+--     SplitsTopDivider = scprStatsUI:GetNamedChild("SplitsTopDivider"),
+--     SplitsBottomDivider = scprStatsUI:GetNamedChild("SplitsBottomDivider"),
 
-    TrifectasLabel = scprStatsUI:GetNamedChild("TrifectasLabel"),
-    TrifectasIcon = scprStatsUI:GetNamedChild("TrifectasIcon"),
-    TrifectasTopDivider = scprStatsUI:GetNamedChild("TrifectasTopDivider"),
-    TrifectasBottomDivider = scprStatsUI:GetNamedChild("TrifectasBottomDivider"),
-}
+--     TrifectasLabel = scprStatsUI:GetNamedChild("TrifectasLabel"),
+--     TrifectasIcon = scprStatsUI:GetNamedChild("TrifectasIcon"),
+--     TrifectasTopDivider = scprStatsUI:GetNamedChild("TrifectasTopDivider"),
+--     TrifectasBottomDivider = scprStatsUI:GetNamedChild("TrifectasBottomDivider"),
+-- }
 
 ------------------------------
 --[[Timer and Splits Visuals]]
@@ -75,77 +92,141 @@ end
 --[[End Screen UI]]
 -------------------
 
-function ScpRunner:InitializeStatsScreen()
-    self.Scene = ZO_Scene:New("ScpRunnerStatsScene", SCENE_MANAGER)
-    self.fragment = ZO_FadeSceneFragment:New(scprStatsUI)
+-- function ScpRunner:InitializeStatsScreen()
+--     self.Scene = ZO_Scene:New("ScpRunnerStatsScene", SCENE_MANAGER)
+--     self.fragment = ZO_FadeSceneFragment:New(scprStatsUI)
 
-    self.Scene:AddFragment(self.fragment)
-    self.Scene:AddFragment(MINIMIZE_CHAT_FRAGMENT)
-    self.Scene:AddFragmentGroup(FRAGMENT_GROUP.FRAME_TARGET_STANDARD_RIGHT_PANEL)
-    SCENE_MANAGER:Show("ScpRunnerStatsScene")
-    self.Scene:RegisterCallback("StateChange", 
-        function(oldState, newState) 
-            ScpRunner:OnSceneStateChanged(oldState, newState) 
-        end)
-end
+--     self.Scene:AddFragment(self.fragment)
+--     self.Scene:AddFragment(MINIMIZE_CHAT_FRAGMENT)
+--     self.Scene:AddFragmentGroup(FRAGMENT_GROUP.FRAME_TARGET_STANDARD_RIGHT_PANEL)
 
-function ScpRunner:OnSceneStateChanged(oldState, newState)
-    d("scenestatechanged")
-    if (newState == SCENE_SHOWN and self.wasStatsScreenOpened == false) then
-        --[Dungeon Icon/Name]
-        self:StatsScreenOpenAnimation(self.UI.DungeonIcon, 400, 0, 360, -490, 1, 0)
-        self:StatsScreenOpenAnimation(self.UI.DungeonName, 500, 0, 500, -490, 1, 0)
-        --[Tally Icon/Time]
-        self:StatsScreenOpenAnimation(self.UI.TallyIcon, 500, 0, 420, -412, 1, 0)
-        self:StatsScreenOpenAnimation(self.UI.TallyLabel, 500, 0, 500, -420, 1, 0)
-        --[Splits Header/Icon]
-        self:StatsScreenOpenAnimation(self.UI.SplitsLabel, 500, 0, 170, -333, 1, 0)
-        self:StatsScreenOpenAnimation(self.UI.SplitsIcon, 500, 0, 115, -326, 1, 0)
-        self:StatsScreenOpenAnimation(self.UI.SplitsTopDivider, 500, 0, 170, -360, 1, 0)
-        self:StatsScreenOpenAnimation(self.UI.SplitsBottomDivider, 500, 0, 170, -295, 1, 0)
-        --[Trifecta Count/Icon]
-        self:StatsScreenOpenAnimation(self.UI.TrifectasLabel, 500, 0, 830, -333, 1, 0)
-        self:StatsScreenOpenAnimation(self.UI.TrifectasIcon, 500, 0, 745, -326, 1, 0)
-        self:StatsScreenOpenAnimation(self.UI.TrifectasTopDivider, 500, 0, 830, -360, 1, 0)
-        self:StatsScreenOpenAnimation(self.UI.TrifectasBottomDivider, 500, 0, 830, -295, 1, 0)
+--     SCENE_MANAGER:Show("ScpRunnerStatsScene")
 
-        self:StatsScreenOpenAnimation(self.UI.TopBG, 500, 0, 500, -450, 0.7, 0)
-        self:StatsScreenOpenAnimation(self.UI.BottomBG, 500, 0, 500, 450, 0.7, 0)
-        self:StatsScreenOpenAnimation(self.UI.TopDivider, 500, 0, 500, -450, 1, 0)
-        self:StatsScreenOpenAnimation(self.UI.TopTopDivider, 500, 0, 500, -525, 1, 0)
-        self:StatsScreenOpenAnimation(self.UI.TopTopBG, 500, 0, 500, -490, .7, 0)
-        self:StatsScreenOpenAnimation(self.UI.TopSubDivider, 500, 0, 500, -375, 1, 0)
-        self:StatsScreenOpenAnimation(self.UI.BottomSubDivider, 500, 0, 500, 375, 1, 0)
-        self:StatsScreenOpenAnimation(self.UI.BottomDivider, 500, 0, 500, 450, 1, 0)
-        scprStatsUI:SetHidden(false)
+--     self.Scene:RegisterCallback("StateChange", function(oldState, newState)
+--         ScpRunner:OnSceneStateChanged(oldState, newState)
+--     end)
+-- end
 
-        self.wasStatsScreenOpened = true
-    elseif (newState == SCENE_HIDDEN) then
-        d("scene hidden waow")
-        scprStatsUI:SetHidden(true)
-        scprStatsUI:SetAlpha(0)
+-- function ScpRunner:OnSceneStateChanged(oldState, newState)
+--     d("scenestatechanged")
+
+--     if (newState == SCENE_SHOWN and self.wasStatsScreenOpened == false) then
+--         scprStatsUI:SetHidden(false)
+
+--         self.wasStatsScreenOpened = true
+--     elseif (newState == SCENE_HIDDEN) then
+--         d("scene hidden waow")
+--         scprStatsUI:SetHidden(true)
+--         scprStatsUI:SetAlpha(0)
+--     end
+-- end
+
+local OFFSETS = {
+    {scprStatsUIHeader,                            0, 400},
+    {scprStatsUIBodyTopBG,                         0, -150},
+    {scprStatsUIBodyBottomBG,                      0, -700},
+
+    {scprStatsUIBodySplitsHeader,                  300, -100},
+    {scprStatsUIBodySplitsTopDivider,              0, 0},
+    {scprStatsUIBodySplitsBottomDivider,           0, 0},
+
+    {scprStatsUIBodyTrifectasHeader,               -300, -100},
+    {scprStatsUIBodyTrifectasTopDivider,           0, 0},
+    {scprStatsUIBodyTrifectasBottomDivider,        0, 0},
+
+    {scprStatsUIBodyCentralColumnTimeTally,        0, 0},
+    {scprStatsUIBodyCentralColumnMap,              0, -400},
+    {scprStatsUIBodyCentralColumnTopSubDivider,    0, 0},
+    {scprStatsUIBodyCentralColumnBottomSubDivider, 0, -800},
+    {scprStatsUIBottomDivider,                     0, -1000},
+}
+
+local Curve = ZO_GenerateCubicBezierEase(1,.08,.69,.63)
+
+local function CreateCloseAnimation()
+    local openTimeline = ANIMATION_MANAGER:CreateTimeline()
+
+    -- openTimeline:SetHandler("OnStop", function() self:TimeTallyer() end)
+    openTimeline:SetPlaybackType(ANIMATION_PLAYBACK_ONE_SHOT)
+
+    -- local toX, toY = scprStatsUI:GetCenter()
+    local endAlpha = 0
+    local duration = 600
+    local delay = 0
+
+    --[[
+    local function collectToCenterAnimation(control)
+        local numChildren = control:GetNumChildren()
+        local parentCenterX, parentCenterY = control:GetCenter()
+        Log('Parent: %s, cX: %.2f, cY: %.2f', control:GetName(), parentCenterX, parentCenterY)
+
+        for i = 1, numChildren do
+            local childControl = control:GetChild(i)
+
+            if childControl then
+                -- if ANIMATE_THESE[childControl:GetType()] then
+                    local x, y = childControl:GetCenter()
+                    Log('Child: %s, cX: %.2f, cY: %.2f', childControl:GetName(), x, y)
+                    local startAlpha = childControl:GetAlpha()
+
+                    local move = openTimeline:InsertAnimation(ANIMATION_TRANSLATE, childControl, delay)
+                    move:SetTranslateDeltas(parentCenterX - x, parentCenterY - y, TRANSLATE_ANIMATION_DELTA_TYPE_FROM_START)
+                    move:SetDuration(duration)
+                    move:SetEasingFunction(Curve)
+
+                    -- local makeVisible = openTimeline:InsertAnimation(ANIMATION_ALPHA, childControl, delay)
+                    -- makeVisible:SetAlphaValues(startAlpha, endAlpha)
+                    -- makeVisible:SetDuration(duration)
+                    -- makeVisible:SetEasingFunction(Curve)
+                -- end
+
+                -- collectToCenterAnimation(childControl)
+            end
+        end
     end
+
+    collectToCenterAnimation(scprStatsUI)
+    --]]
+
+    ---[[
+    for _, controlData in ipairs(OFFSETS) do
+        -- local x, y = controlData:GetCenter()
+        local startAlpha = controlData[1]:GetAlpha()
+
+        local move = openTimeline:InsertAnimation(ANIMATION_TRANSLATE, controlData[1], delay)
+        -- move:SetTranslateDeltas(toX - x, toY - y)
+        move:SetTranslateDeltas(controlData[2], controlData[3])
+        move:SetDuration(duration)
+        move:SetEasingFunction(Curve)
+
+        local makeVisible = openTimeline:InsertAnimation(ANIMATION_ALPHA, controlData[1], delay)
+        makeVisible:SetAlphaValues(startAlpha, endAlpha)
+        makeVisible:SetDuration(duration)
+        makeVisible:SetEasingFunction(Curve)
+    end
+
+    local scale = openTimeline:InsertAnimation(ANIMATION_SCALE, scprStatsUIBodyCentralColumnMap, delay)
+        -- move:SetTranslateDeltas(toX - x, toY - y)
+        scale:SetScaleValues(scprStatsUIBodyCentralColumnMap:GetScale(), 0.3)
+        scale:SetDuration(duration)
+        scale:SetEasingFunction(Curve)
+    --]]
+
+    return openTimeline
 end
 
-function ScpRunner:StatsScreenOpenAnimation(control, startx, starty, x, y, endAlpha, startTime)
-    local Curve = ZO_GenerateCubicBezierEase(1,.08,.69,.63)
-    local timeline = ANIMATION_MANAGER:CreateTimeline()
-    timeline:SetHandler("OnStop", function() self:TimeTallyer() end)
-    timeline:SetPlaybackType(ANIMATION_PLAYBACK_ONE_SHOT)
 
-    local move = timeline:InsertAnimation(ANIMATION_TRANSLATE, control, startTime)
-    move:SetTranslateOffsets(startx, starty, x, y) --start offsetx, startoffsety, endoffsets, endoffsets.
-    move:SetDuration(600)
-    move:SetEasingFunction(Curve)
-
-    local makeVisible = timeline:InsertAnimation(ANIMATION_ALPHA, control, startTime)
-    makeVisible:SetAlphaValues(0, endAlpha)
-    makeVisible:SetDuration(600)
-    makeVisible:SetEasingFunction(Curve)
-    timeline:PlayFromStart()
-end
-
-
-SLASH_COMMANDS["/createscene1"] = function() 
+SLASH_COMMANDS["/createscene1"] = function()
     ScpRunner:InitializeStatsScreen()
-    end
+end
+
+local timeline = CreateCloseAnimation()
+SLASH_COMMANDS["/scpgo"] = function()
+    -- local timeline = CreateOpenAnimation()
+    timeline:PlayFromStart(0)
+end
+
+SLASH_COMMANDS["/scpgob"] = function()
+    -- local timeline = CreateOpenAnimation()
+    timeline:PlayFromEnd(0)
+end

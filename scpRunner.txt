@@ -4,6 +4,7 @@
 ## Author: luchtt
 ## Description: scp speedrun timer
 ## SavedVariables: scpRunnerSavedVariables
+## OptionalDependsOn: LibDebugLogger
 
 ScpRunner.xml
 ScpRunner.lua
