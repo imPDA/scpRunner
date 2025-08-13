@@ -122,24 +122,34 @@ end
 -- end
 
 local OFFSETS = {
-    {scprStatsUIHeader,                            0, 400},
-    {scprStatsUIBodyTopBG,                         0, -150},
-    {scprStatsUIBodyBottomBG,                      0, -700},
-
-    {scprStatsUIBodySplitsHeader,                  300, -100},
-    {scprStatsUIBodySplitsTopDivider,              0, 0},
-    {scprStatsUIBodySplitsBottomDivider,           0, 0},
-
-    {scprStatsUIBodyTrifectasHeader,               -300, -100},
-    {scprStatsUIBodyTrifectasTopDivider,           0, 0},
-    {scprStatsUIBodyTrifectasBottomDivider,        0, 0},
-
-    {scprStatsUIBodyCentralColumnTimeTally,        0, 0},
-    {scprStatsUIBodyCentralColumnMap,              0, -400},
-    {scprStatsUIBodyCentralColumnTopSubDivider,    0, 0},
-    {scprStatsUIBodyCentralColumnBottomSubDivider, 0, -800},
-    {scprStatsUIBottomDivider,                     0, -1000},
+    [scprStatsUIHeader] =                             {0, 400, 0},
+    [scprStatsUIBodyTopBG] =                          {0, -150, 0},
+    [scprStatsUIBodyBottomBG] =                       {0, -700, 0},
+    [scprStatsUIBodySplitsHeader] =                   {300, 100, -500},
+    [scprStatsUIBodySplitsTopDivider] =               {0, 0, 0},
+    [scprStatsUIBodySplitsBottomDivider] =            {0, 0, 0},
+    [scprStatsUIBodyTrifectasHeader] =                {-300, 100, -500},
+    [scprStatsUIBodyTrifectasTopDivider] =            {0, 0, 0},
+    [scprStatsUIBodyTrifectasBottomDivider] =         {0, 0, 0},
+    [scprStatsUIBodyCentralColumnTimeTally] =         {0, 0, 0},
+    [scprStatsUIBodyCentralColumnMap] =               {0, -400, -1000},
+    [scprStatsUIBodyCentralColumnTopSubDivider] =     {0, 0, 0},
+    [scprStatsUIBodyCentralColumnBottomSubDivider] =  {0, -800, 0},
+    [scprStatsUIBottomDivider] =                      {0, -1000, 0},
 }
+
+do
+    local min = math.huge
+    for control, data in pairs(OFFSETS) do
+        if data[3] < min then
+            min = data[3]
+        end
+    end
+
+    for control, data in pairs(OFFSETS) do
+        data[3] = data[3] - min
+    end
+end
 
 local Curve = ZO_GenerateCubicBezierEase(1,.08,.69,.63)
 
@@ -189,23 +199,23 @@ local function CreateCloseAnimation()
     --]]
 
     ---[[
-    for _, controlData in ipairs(OFFSETS) do
+    for control, controlData in pairs(OFFSETS) do
         -- local x, y = controlData:GetCenter()
-        local startAlpha = controlData[1]:GetAlpha()
+        local startAlpha = control:GetAlpha()
 
-        local move = openTimeline:InsertAnimation(ANIMATION_TRANSLATE, controlData[1], delay)
+        local move = openTimeline:InsertAnimation(ANIMATION_TRANSLATE, control, controlData[3])
         -- move:SetTranslateDeltas(toX - x, toY - y)
-        move:SetTranslateDeltas(controlData[2], controlData[3])
+        move:SetTranslateDeltas(controlData[1], controlData[2])
         move:SetDuration(duration)
         move:SetEasingFunction(Curve)
 
-        local makeVisible = openTimeline:InsertAnimation(ANIMATION_ALPHA, controlData[1], delay)
+        local makeVisible = openTimeline:InsertAnimation(ANIMATION_ALPHA, control, controlData[3])
         makeVisible:SetAlphaValues(startAlpha, endAlpha)
         makeVisible:SetDuration(duration)
         makeVisible:SetEasingFunction(Curve)
     end
 
-    local scale = openTimeline:InsertAnimation(ANIMATION_SCALE, scprStatsUIBodyCentralColumnMap, delay)
+    local scale = openTimeline:InsertAnimation(ANIMATION_SCALE, scprStatsUIBodyCentralColumnMap, 0)
         -- move:SetTranslateDeltas(toX - x, toY - y)
         scale:SetScaleValues(scprStatsUIBodyCentralColumnMap:GetScale(), 0.3)
         scale:SetDuration(duration)
