@@ -1,18 +1,17 @@
 <GuiXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sir.insidi.at/or/schema/esoui.xsd">
     <Controls>
         <!-- Virtual controls -->
-        <Control name="scprSplitsTemplates" virtual="true" height="40" hidden="false">
+        <Label name="scpDefaultLabel" font="ZoFontWinH1" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" horizontalAlignment="LEFT" verticalAlignment="CENTER" virtual="true" />
+    
+        <Control name="scpRowTemplate" virtual="true">
+            <Dimensions y="40" />
             <Controls>
-                <Label name="$(parent)SplitsName" font="ZoFontWinH2" 
-               color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" 
-               horizontalAlignment="LEFT" verticalAlignment="CENTER" 
-               movable="true" mouseEnabled="true" hidden="false"
-               anchor="TOPLEFT"/>
-                <Label name="$(parent)SplitsTime" font="ZoFontWinH3" 
-               color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" 
-               horizontalAlignment="LEFT" verticalAlignment="CENTER" 
-               movable="true" mouseEnabled="true" hidden="false"
-               anchor="BOTTOMLEFT"/>
+                <Label name="$(parent)NameLabel" inherits="scpDefaultLabel" font="ZoFontWinH2" text="-">
+                    <Anchor point="LEFT" />
+                </Label>
+                <Label name="$(parent)TimeLabel" inherits="scpDefaultLabel" font="ZoFontWinH3" text="-">
+                    <Anchor point="LEFT" relativeTo="$(parent)NameLabel" relativePoint="RIGHT" offsetX="15" />
+                </Label>
             </Controls>
         </Control>
         
@@ -42,8 +41,6 @@
             <AnchorFill />
         </Texture>
 
-        <Label name="scpDefaultLabel" font="ZoFontWinH1" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" horizontalAlignment="LEFT" verticalAlignment="CENTER" virtual="true" />
-    
         <!-- Main run review UI -->
         <TopLevelControl name="scprStatsUI" hidden="false">
             <Dimensions x="1152" y="1075" />
@@ -144,11 +141,11 @@
                                         <Anchor point="TOP" relativeTo="$(parent)Header" relativePoint="BOTTOM" />
                                     </Texture>
                                     <Control name="$(parent)List" inherits="ZO_ScrollList">
-                                        <Dimensions x="300" />
+                                        <Dimensions x="350" />
                                         <Anchor point="TOP" relativeTo="$(parent)BottomDivider" relativePoint="BOTTOM" />
                                         <Anchor point="BOTTOM" />
                                         <Controls>
-                                            <!-- <Texture name="$(parent)DebugBackground" inherits="scpDebugBackground" color="FFFFFF" alpha="0.5" /> -->
+                                            <!-- <Texture name="$(parent)DebugBackground" inherits="scpDebugBackground" color="00FF00" alpha="0.5" /> -->
                                         </Controls>
                                     </Control>
                                 </Controls>
